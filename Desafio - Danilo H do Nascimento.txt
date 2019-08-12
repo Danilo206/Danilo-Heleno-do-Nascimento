@@ -1,0 +1,208 @@
+Funcionalidades:
+1)	Enviar imagem para outro usuário via Whatsapp Web 
+
+Funcionalidade: Encaminhar imagem para outro usuário via Whatsapp Web
+	Como usuário do Whatsapp Web desejo encaminhar imagem recebida para um ou mais contato
+  	Cenário: Encaminhar imagem recebida para mais de um contato ao mesmo tempo
+    		Dado que o usuário já se autenticou com sucesso no sistema
+    		E já está no contato que lhe repassou uma imagem
+    		Quando o usuário clicar na seta direcional de imagem 
+    		E selecionar mais de um contato
+		E clicar no botão de envio	
+Então o sistema deverá encaminhar a imagem para os contatos selecionados 
+
+Cenário: Encaminhar imagem recebida para um contato
+    		Dado que o usuário já se autenticou com sucesso no sistema 
+    		E já está no contato que lhe repassou uma imagem
+    		Quando o usuário clicar na seta direcional de imagem 
+    		E selecionar um contato
+		E clicar no botão de envio	
+Então o sistema deverá encaminhar a imagem para o contato selecionado
+
+Cenário: Encaminhar imagem recebida para um contato via seleção de opções
+    		Dado que o usuário já se autenticou com sucesso no sistema
+    		E já está no contato que lhe repassou uma imagem
+    		Quando o usuário clicar na seta localizada no canto superior direito de imagem 
+    		E seleciona a opção no encaminhar mensagem
+		E clica no botão encaminhar mensagem
+E seleciona o contato desejado
+E clica no botão de enviar mensagem	
+Então o sistema deverá encaminhar a imagem para o contato selecionado
+2)	Enviar mensagem para usuário via Whatsapp Web
+Funcionalidade: Enviar mensagem de texto para usuário via Whatsapp Web
+	Como usuário do Whatsapp Web desejo enviar uma mensagem de texto para um contato desejado
+  	Cenário: Enviar mensagem de texto para usuário
+    		Dado que o usuário já se autenticou com sucesso no sistema
+    		Quando o usuário clicar no contato desejado
+    		E digitar o texto desejado na caixa de texto   
+		E clicar no botão de envio	
+Então o sistema deverá enviar a mensagem com sucesso
+
+//Automação para a funcionalidade 1 - Encaminhar imagem para outro usuário via Whatsapp Web
+
+Método de Validação da Classe Teste C#
+//Metodo de teste
+[FACT]
+public void ValidaReenvioImagem(){
+//Assumindo que o usuário já possui um método de autenticação OK;
+RealizaAutenticacao();
+//Realiza o reenvio de imagem via seta direcional a direita da imagem
+ReenviarImagem(“José de Oliveira”);
+//Valida se a imagem foi enviada onde deve constar na tela no Css passado
+Assert.IsTrue(“CssSeletor #main > div.1_q7u > div > div > div.1ays2 > div:nth-child(52) > div > div._3SaET > div > div._3mdDl > img”).Display);
+FechaDriver();
+}
+//Demais métodos de manipulação de tela estão abaixo
+
+
+
+Métodos de Ações
+//Método para realização de ação por Css
+public IWebElement CssSeletor(string selecao){
+return driver.FindElement(By.CssSelector(selecao));
+}
+//Método para realização de ação por Id
+public IWebElement Id(string id){
+return driver.FindElement(By.Id(id));
+}
+public void SelecionarContato(string contato){
+//Clica no campo de Busca de contatos por nome
+CssSeletor(“#app > div > span:nth-child(2) > div > span > div > div > div > div > div > div > div:nth-child(2) > div > label > input”).Click();
+//Inserindo no campo de Busca de contatos o nome do contato
+CssSeletor(“#app > div > span:nth-child(2) > div > span > div > div > div > div > div > div > div:nth-child(2) > div > label > input”).SendKeys(contato);
+//Assumindo que só há um contato com o mesmo nome, selecionando
+CssSeletor(“#app > div > span:nth-child(2) > div > span > div > div > div > div > div > div > div._1c8mz.rK2ei > div:nth-child(1) > div > div > div:nth-child(4) > div > div:nth-child(2) > div”).Click();
+}
+//Método de Reenvio de imagem, assumindo que a imagem a ser selecionada é a ultima imagem recebida não necessitando assim a realização de outro método de scroll de tela.
+public void ReenviarImagem(string contato){
+//Clica na seta direcional de reenvio de mensagem a direita
+CssSeletor(“#main > div._1_q7u > div > div > div._1ays2 > div:nth-child(52) > div > div.gxf3C > span”).Click();
+//Busca contato que deseja reenviar a imagem
+SelecionarContato(contato);
+//Clica para reenviar a imagem
+CssSeletor(“#app > div > span:nth-child(2) > div > span > div > div > div > div > div > div > span > div > div > div > span”).Click();
+}
+//Assumindo que a classe já de teste já está herdando de uma superclasse com uma variável driver inicializada
+public void FechaDriver(){
+driver.Quit();
+} 
+
+
+Objetivo do Desafio
+Verificar suas habilidades em conceber cenários de testes e em programação, necessárias para automatização dos testes.
+Para isso você deverá conceber cenários para duas funcionalidades do Whatsapp e resolver o exercício 09 do site CodeKata, que também pode ser encontrado aqui.
+Deve conter
+•	Especificação de duas funcionalidades do Whatsapp (não importa se o app é Android, iOS, Windows Phone ou versão Web) em Gherkin ou Gauge
+•	Cada especificação deve conter ao menos um cenário de teste
+•	Resposta do exercício 09 do site CodeKata, ou aqui, na linguagem de programação que lhe for mais conveniente
+Processo de submissão
+O candidato deverá implementar a solução e enviar um pull request para este repositório com a solução.
+O processo de Pull Request funciona da seguinte maneira:
+1.	Candidato fará um fork desse repositório (não irá clonar direto!)
+2.	Fará seu projeto nesse fork.
+3.	Commitará e subirá as alterações para o SEU fork.
+4.	Irá enviar um Pull Request para este repositório.
+ATENÇÃO
+Não se deve tentar fazer o PUSH diretamente para ESTE repositório!!!
+Resolução do Exercício 9
+1 – Para resolução da questão seria necessário montar um método apartado, no qual o sistema recebe por parâmetro a string e por meio dessa string, verifica quais letras foram repassadas e posteriormente, cairia em IFs contendo as seguintes regras:
+Regra 1 
+Se a string repassada conter a letra "A" e, a somatória de letras A conter três ou mais letras, o sistema aplica a seguinte fórmula A = (50*(SOMATÓRIA DE LETRAS A )- 20, caso contrário, (não possuir AAA) não subtrai 20;
+Regra 2
+Se a string repassada conter a letra "B" e, a somatória de letras B conter duas ou mais letras, o sistema aplica a seguinte fórmula B = 30*(SOMATÓRIA DE LETRAS B) - 15, caso contrário, (não possuir AAA) não subtrai 15;
+Regra 3
+Se a string repassada conter a letra "C", independente de quantidade de letras C = 20*(SOMATÓRIA DE LETRAS C)
+Regra 4
+Se a string repassada conter a letra "D", independente de quantidade de letras D = 15*(SOMATÓRIA DE LETRAS D)
+Regra 5
+Se a string repassada conter a letra diferente de A, B, C ou D, valor é igual a zero.
+Então: O preço a ser implementado é igual a soma das regras 1, 2, 3, 4 e 5.
+Por fim, o sistema retorna ao método atual simplesmente o valor obtido do preço a ser implementado e faz um assert. No método atual, não seria necessário repassar valores para as letras diminuindo assim o tamanho e complexidade do método, sendo que também não se saberia sobre itens específicos e suas estratégias de preços. Ainda, para maior manutenabilidade futura bastaria escrever ou reescrever a regra atual a qual está simplificada, mas se fosse outra ainda não existente bastaria copiar uma regra atual, alterando a letra e o valor de desconto para o desejado.
+IMPLEMENTAÇÃO C# DO MÉTODO DE VERIFICAÇÃO DAS REGRAS
+//Assumindo que a string já foi separada por meio do split em um método string chamado “Separador” que retorna as letras de A, B, C, D ou outra digitada e a somatória da mesma.
+public string VerificaRegra(string dado){
+int regra1 = Regra1(dado);
+int regra2 = Regra2(dado);
+int regra3 = Regra3(dado);
+int regra4 = Regra4(dado);
+int regra5 = Regra5(dado);
+int preco = regra1+ regra2+ regra3+ regra4+ regra5;
+return Convert.ToString(preco);
+
+}
+public int Regra1(string dado){
+	int a = 0;
+	int resultado = 0;
+	while(Separador(dado).Contains( “A”)){
+	a = a+1;
+	}
+	if(a>=3)
+	return resultado = 50*a – 20;
+	if(a>0)
+	return resultado = 50*a;
+        return resultado;	
+}
+
+
+public int Regra2(string dado){
+	int b = 0;
+	int resultado = 0;
+	while(Separador(dado).Contains( “B”)){
+	b = b+1;
+	}
+	if(b>=2)
+	return resultado = 30*b – 15;
+	if(b>0)
+	return resultado = 30*b;
+        return resultado;	
+}
+
+
+public int Regra3(string dado){
+	int c = 0;
+	int resultado = 0;
+	while(Separador(dado).Contains( “C”)){
+	c = c+1;
+	}
+	if(c>0)
+	return resultado = 20*c;
+        return resultado;	
+}
+
+
+public int Regra4(string dado){
+	int d = 0;
+	int resultado = 0;
+	while(Separador(dado).Contains( “D”)){
+	d = d+1;
+	}
+	if(d>0)
+	return resultado = 15*d;
+        return resultado;	
+}
+
+
+public int Regra5(string dado){
+	int resultado = 0;
+	if(Separador(dado).Contains( “A”) || Separador(dado).Contains( “B”)
+	|| Separador(dado).Contains( “C”) || Separador(dado).Contains( “D”))
+        return resultado;	
+}
+
+
+
+
+class TestPrice < Test::Unit::TestCase
+	def price(goods)
+		co = CheckOut.new(RULES)
+		goods.split(//).each { |item| co.scan(item) }
+		co.total 
+	end
+
+	def test_incremental
+		//Pega o resultado das regras e verifica com o co.total no assert
+		assert_equal(VerificaRegra(dado), co.total)
+	end 
+end
+
+
